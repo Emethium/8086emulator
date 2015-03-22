@@ -3,18 +3,19 @@ module Encoder
 	# Object to be returned:
 	# { memory: { exp: exp [, imed: imed] } }
 	def memory_access(string)
-		# string.gsub!(/(\s|\[|\])/, '')
-		values = string.upcase.scan(/([B,S][P,I,X])?(\-?\d*)/).flatten.delete_if { |v| v == "" || v == nil }
+		values = string.upcase.scan(/([BS][PIX])?(\-?\d*)/).flatten.delete_if { |v| v == "" || v == nil }
 
-		raise "ERROR: Bad format in line" if values.empty?
+		errors = string.upcase.scan(/([^BSPIX\d\s\+\-\]\[])/).flatten.delete_if { |v| v == "" || v == nil }
+
+		raise 'ERROR: Invalid argument' if values.empty? || !errors.empty?
 
 		result = {}
 		
 		case values.length
 		when 1
 			result[:memory] = one_arg(values)
-		when 2 
-			result[:memory] = two_args(values)
+		else
+			result[:memory] = multiple_args(values)
 		end
 		result
 	end
@@ -22,15 +23,23 @@ module Encoder
 	private 
 
 	def is_number?(args)
-		!args[0].scan(/\d+/).empty?
+		if args.class == Array
+			!args[0].scan(/\d+/).empty?
+		else
+			!args.scan(/\d+/).flatten.delete_if { |v| v == "" || v == nil }.empty?
+		end
 	end
 
-	def two_args(args)
-		if is_number? args[1]
-			{ exp: [args[0]], imed: args[1].to_i }
-		else
-			{ exp: args }
+	def multiple_args(args)
+		result = { exp: [] }
+		args.each do |arg|
+			if is_number?(arg)
+				result[:imed] = arg.to_i
+			else
+				result[:exp] <<  arg
+			end
 		end
+		result
 	end
 
 	def one_arg(args)

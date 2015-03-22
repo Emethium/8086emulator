@@ -39,5 +39,17 @@ describe Encoder do
 			shoulda = { memory: { exp: %w(BP SI) } }
 			expect(result).to eq(shoulda)
 		end
+
+		it '[BP+CX] is invalid' do
+			expect{ @encoder.memory_access('[BP+CX]') }.to raise_error(RuntimeError)
+		end
 	end
+
+	context 'memory with three arguents' do
+		it '[BX+SI+1200]' do
+			result = @encoder.memory_access('[BX+SI+1200]')
+			expect(result).to eq( { memory: { exp: ['BX', 'SI'], imed: 1200} } )
+		end
+	end
+
 end
