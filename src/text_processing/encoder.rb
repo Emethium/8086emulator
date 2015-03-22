@@ -37,7 +37,8 @@ module TextProcessing
 				if is_number?(arg)
 					result[:imed] = arg.to_i
 				else
-					result[:exp] <<  arg
+					# arg.map { |v| v.downcase.to_sym }
+					result[:exp] <<  arg.downcase.to_sym
 				end
 			end
 			result
@@ -47,7 +48,7 @@ module TextProcessing
 			if is_number? args
 				{ imed: args[0].to_i }
 			else
-				{ exp: args }
+				{ exp: args.map { |v| v.downcase.to_sym } }
 			end
 		end
 

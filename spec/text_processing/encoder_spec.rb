@@ -13,7 +13,7 @@ describe TextProcessing::Encoder do
 	context 'memory with one argument' do
 		it '[SI]' do
 			string = '[SI]'
-			expected = { memory: { exp: ["SI"] } }
+			expected = { memory: { exp: [:si] } }
 			result = @encoder.memory_access(string)
 
 			expect(result).to eq(expected)
@@ -30,13 +30,13 @@ describe TextProcessing::Encoder do
 	context 'memory with two arguments' do
 		it '[SI+9]' do
 			result = @encoder.memory_access('[SI+9]')
-			shoulda = { memory: { exp: ["SI"], imed: 9} }
+			shoulda = { memory: { exp: [:si], imed: 9} }
 			expect(result).to eq(shoulda)
 
 		end
 		it '[BP+SI]' do
 			result = @encoder.memory_access('[BP+SI]')
-			shoulda = { memory: { exp: %w(BP SI) } }
+			shoulda = { memory: { exp: [:bp, :si] } }
 			expect(result).to eq(shoulda)
 		end
 
@@ -48,7 +48,7 @@ describe TextProcessing::Encoder do
 	context 'memory with three arguents' do
 		it '[BX+SI+1200]' do
 			result = @encoder.memory_access('[BX+SI+1200]')
-			expect(result).to eq( { memory: { exp: ['BX', 'SI'], imed: 1200} } )
+			expect(result).to eq( { memory: { exp: [:bx, :si], imed: 1200} } )
 		end
 	end
 
