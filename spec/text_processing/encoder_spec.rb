@@ -1,9 +1,9 @@
 require_relative '../../src/text_processing/encoder'
 
 
-describe Encoder do
+describe TextProcessing::Encoder do
 	class EncoderClass
-		include Encoder
+		include TextProcessing::Encoder
 	end
 	
 	before(:all) do
